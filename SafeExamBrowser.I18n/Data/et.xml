@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <Text>
     <Entry key="AboutWindow_LicenseInfo">
         Selle rakenduse puhul kohaldatakse Mozilla avaliku litsentsi versiooni 2.0 tingimusi. Safe Exam Browser kasutab järgmisi raamistikke ja kolmandate osapoolte teeke:
@@ -377,6 +377,18 @@
     </Entry>
     <Entry key="MessageBox_InvalidQuitPasswordTitle">
         Sobimatu sulgemisparool
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordExpired">
+        Väljumisparool on aegunud. Palun küsige eksamiadministraatorilt uut parooli.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordExpiredTitle">
+        Väljumisparool on aegunud
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailable">
+        Väljumisparooli ei saanud kontrollida, sest CBT-server ei ole kättesaadav. Palun võtke ühendust eksamiadministraatoriga.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailableTitle">
+        Väljumisparool pole saadaval
     </Entry>
     <Entry key="MessageBox_InvalidUnlockPassword">
         SEB'i saab avada ainult õige parooli sisestamisega.

@@ -378,6 +378,18 @@
     <Entry key="MessageBox_InvalidQuitPasswordTitle">
         Ongeldig afsluitwachtwoord
     </Entry>
+    <Entry key="MessageBox_QuitPasswordExpired">
+        Het afsluitwachtwoord is verlopen. Vraag een nieuw wachtwoord aan de examendeskundige.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordExpiredTitle">
+        Afsluitwachtwoord verlopen
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailable">
+        Het afsluitwachtwoord kon niet worden geverifieerd omdat de CBT-server onbereikbaar is. Neem contact op met de examendeskundige.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailableTitle">
+        Afsluitwachtwoord niet beschikbaar
+    </Entry>
     <Entry key="MessageBox_InvalidUnlockPassword">
         SEB kan alleen worden ontgrendeld door het juiste wachtwoord in te voeren.
     </Entry>

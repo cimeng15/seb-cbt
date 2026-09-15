@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <Text>
     <Entry key="AboutWindow_LicenseInfo">
         Bu uygulama, Mozilla Kamu Lisansı sürüm 2.0 şartlarına tabidir. Safe Exam Browser aşağıdaki çerçeveleri ve üçüncü taraf kütüphaneleri kullanır:
@@ -377,6 +377,18 @@
     </Entry>
     <Entry key="MessageBox_InvalidQuitPasswordTitle">
         Geçersiz Çıkış Şifresi
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordExpired">
+        Çıkış parolasının süresi dolmuş. Lütfen sınav yöneticisinden yeni bir parola isteyin.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordExpiredTitle">
+        Çıkış Parolasının Süresi Doldu
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailable">
+        CBT sunucusuna ulaşılamadığı için çıkış parolası doğrulanamadı. Lütfen sınav yöneticisiyle iletişime geçin.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailableTitle">
+        Çıkış Parolası Kullanılamıyor
     </Entry>
     <Entry key="MessageBox_InvalidUnlockPassword">
         SEB yalnızca doğru şifre girilerek kilidi açılabilir.

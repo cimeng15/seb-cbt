@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <Text>
     <Entry key="AboutWindow_LicenseInfo">
         Această aplicație este supusă termenilor Mozilla Public License, versiunea 2.0. Safe Exam Browser utilizează următoarele cadre și biblioteci terțe:
@@ -377,6 +377,18 @@
     </Entry>
     <Entry key="MessageBox_InvalidQuitPasswordTitle">
         Parolă incorectă pentru ieșire
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordExpired">
+        Parola de ieșire a expirat. Vă rugăm să solicitați o parolă nouă administratorului examenului.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordExpiredTitle">
+        Parolă de ieșire expirată
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailable">
+        Parola de ieșire nu a putut fi verificată deoarece serverul CBT nu este accesibil. Vă rugăm să contactați administratorul examenului.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailableTitle">
+        Parolă de ieșire indisponibilă
     </Entry>
     <Entry key="MessageBox_InvalidUnlockPassword">
         SEB poate fi deblocat doar prin introducerea parolei corecte.

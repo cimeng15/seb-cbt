@@ -393,6 +393,18 @@
     <Entry key="MessageBox_InvalidQuitPasswordTitle">
         Ungültiges Quit-Passwort
     </Entry>
+    <Entry key="MessageBox_QuitPasswordExpired">
+        Das Beenden-Kennwort ist abgelaufen. Bitte fordern Sie ein neues Kennwort bei der Prüfungsaufsicht an.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordExpiredTitle">
+        Beenden-Kennwort abgelaufen
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailable">
+        Das Beenden-Kennwort konnte nicht überprüft werden, da der CBT-Server nicht erreichbar ist. Bitte wenden Sie sich an die Prüfungsaufsicht.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailableTitle">
+        Beenden-Kennwort nicht verfügbar
+    </Entry>
     <Entry key="MessageBox_InvalidUnlockPassword">
         SEB kann nur durch Eingabe des korrekten Passworts entsperrt werden.
     </Entry>

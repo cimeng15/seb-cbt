@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <Text>
     <Entry key="AboutWindow_LicenseInfo">
         Denna applikation är föremål för villkoren i Mozilla Public License, version 2.0. Safe Exam Browser använder följande ramverk och tredjepartsbibliotek:
@@ -377,6 +377,18 @@
     </Entry>
     <Entry key="MessageBox_InvalidQuitPasswordTitle">
         Ogiltigt lösenord
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordExpired">
+        Utgångslösenordet har upphört att gälla. Be examensadministratören om ett nytt lösenord.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordExpiredTitle">
+        Utgångslösenordet har upphört
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailable">
+        Utgångslösenordet kunde inte verifieras eftersom CBT-servern inte är nåbar. Kontakta examensadministratören.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailableTitle">
+        Utgångslösenordet är inte tillgängligt
     </Entry>
     <Entry key="MessageBox_InvalidUnlockPassword">
         Du måste ange rätt lösenord för att öppna SEB.

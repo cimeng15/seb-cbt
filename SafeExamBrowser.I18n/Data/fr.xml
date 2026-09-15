@@ -378,6 +378,18 @@
     <Entry key="MessageBox_InvalidQuitPasswordTitle">
         Mot de passe d’arrêt erroné
     </Entry>
+    <Entry key="MessageBox_QuitPasswordExpired">
+        Le mot de passe de sortie a expiré. Veuillez demander un nouveau mot de passe à l'administrateur de l'examen.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordExpiredTitle">
+        Mot de passe de sortie expiré
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailable">
+        Le mot de passe de sortie n'a pas pu être vérifié car le serveur CBT est injoignable. Veuillez contacter l'administrateur de l'examen.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailableTitle">
+        Mot de passe de sortie indisponible
+    </Entry>
     <Entry key="MessageBox_InvalidUnlockPassword">
         SEB ne peut être déverrouillé qu'en entrant le mot de passe correct.
     </Entry>

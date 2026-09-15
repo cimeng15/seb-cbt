@@ -378,6 +378,18 @@
     <Entry key="MessageBox_InvalidQuitPasswordTitle">
         Contraseña de salida incorrecta
     </Entry>
+    <Entry key="MessageBox_QuitPasswordExpired">
+        La contraseña de salida ha caducado. Solicite una nueva contraseña al administrador del examen.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordExpiredTitle">
+        Contraseña de salida caducada
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailable">
+        No se pudo verificar la contraseña de salida porque el servidor CBT no está disponible. Contacte con el administrador del examen.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailableTitle">
+        Contraseña de salida no disponible
+    </Entry>
     <Entry key="MessageBox_InvalidUnlockPassword">
         SEB sólo puede desbloquearse introduciendo la contraseña correcta.
     </Entry>

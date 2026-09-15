@@ -161,15 +161,29 @@ namespace SafeExamBrowser.Client.Responsibilities
 			var result = dialog.Show();
 			var success = false;
 
-			if (result.Success && IsValidQuitPassword(result.Password))
+			if (!result.Success)
 			{
-				success = true;
-				Logger.Info("The user entered the correct quit password, the application will now terminate.");
+				return false;
 			}
-			else if (result.Success)
+
+			switch (VerifyQuitPassword(result.Password))
 			{
-				Logger.Info("The user entered the wrong quit password.");
-				messageBox.Show(TextKey.MessageBox_InvalidQuitPassword, TextKey.MessageBox_InvalidQuitPasswordTitle, icon: MessageBoxIcon.Warning);
+				case QuitPasswordVerification.Valid:
+					success = true;
+					Logger.Info("The user entered the correct quit password, the application will now terminate.");
+					break;
+				case QuitPasswordVerification.Expired:
+					Logger.Info("The quit password has expired.");
+					messageBox.Show(TextKey.MessageBox_QuitPasswordExpired, TextKey.MessageBox_QuitPasswordExpiredTitle, icon: MessageBoxIcon.Warning);
+					break;
+				case QuitPasswordVerification.Unavailable:
+					Logger.Info("The quit password could not be verified because no CBT kiosk endpoint was reachable.");
+					messageBox.Show(TextKey.MessageBox_QuitPasswordUnavailable, TextKey.MessageBox_QuitPasswordUnavailableTitle, icon: MessageBoxIcon.Warning);
+					break;
+				default:
+					Logger.Info("The user entered the wrong quit password.");
+					messageBox.Show(TextKey.MessageBox_InvalidQuitPassword, TextKey.MessageBox_InvalidQuitPasswordTitle, icon: MessageBoxIcon.Warning);
+					break;
 			}
 
 			return success;

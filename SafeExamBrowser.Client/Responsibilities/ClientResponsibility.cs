@@ -47,9 +47,7 @@ namespace SafeExamBrowser.Client.Responsibilities
 
 		protected bool IsValidQuitPassword(string password)
 		{
-			var valid = !string.IsNullOrEmpty(Settings.Security.CbtKioskUrl) && Context.CbtKioskClient != default
-				? IsValidCbtKioskPassword(password)
-				: IsValidLocalQuitPassword(password);
+			var valid = VerifyQuitPassword(password) == QuitPasswordVerification.Valid;
 
 			if (valid)
 			{
@@ -57,6 +55,20 @@ namespace SafeExamBrowser.Client.Responsibilities
 			}
 
 			return valid;
+		}
+
+		/// <summary>
+		/// Verifies the given quit/unlock password, either against the CBT kiosk settings endpoint (if configured) or against the locally
+		/// configured quit password hash. Returns a detailed result so that the caller can distinguish a wrong password from an expired one.
+		/// </summary>
+		protected QuitPasswordVerification VerifyQuitPassword(string password)
+		{
+			if (!string.IsNullOrEmpty(Settings.Security.CbtKioskUrl) && Context.CbtKioskClient != default)
+			{
+				return VerifyAgainstCbtKiosk(password);
+			}
+
+			return IsValidLocalQuitPassword(password) ? QuitPasswordVerification.Valid : QuitPasswordVerification.Invalid;
 		}
 
 		/// <summary>
@@ -76,7 +88,7 @@ namespace SafeExamBrowser.Client.Responsibilities
 		/// the locally configured quit password hash apply (if any), so that an exam can always be terminated even when the CBT server is
 		/// unavailable.
 		/// </summary>
-		private bool IsValidCbtKioskPassword(string password)
+		private QuitPasswordVerification VerifyAgainstCbtKiosk(string password)
 		{
 			var attempts = Settings.Security.CbtKioskAttempts > 0 ? Settings.Security.CbtKioskAttempts : 1;
 			var interval = Settings.Security.CbtKioskAttemptInterval;
@@ -91,24 +103,40 @@ namespace SafeExamBrowser.Client.Responsibilities
 			if (!settings.Success)
 			{
 				Logger.Warn($"Failed to retrieve the quit password from the CBT kiosk endpoint(s): {settings.Message}.");
-				Logger.Warn($"Falling back to the locally configured quit password{(string.IsNullOrEmpty(Settings.Security.QuitPasswordHash) ? " (none configured, access denied)" : string.Empty)}.");
 
-				return !string.IsNullOrEmpty(Settings.Security.QuitPasswordHash) && IsValidLocalQuitPassword(password);
+				if (!string.IsNullOrEmpty(Settings.Security.QuitPasswordHash))
+				{
+					Logger.Warn("Falling back to the locally configured quit password.");
+
+					return IsValidLocalQuitPassword(password) ? QuitPasswordVerification.Valid : QuitPasswordVerification.Invalid;
+				}
+
+				Logger.Warn("No locally configured quit password available, denying access.");
+				return QuitPasswordVerification.Unavailable;
 			}
 
-			if (settings.IsExpired)
+			if (settings.IsExpired || HasExpired(settings.PasswordExpiresAt))
 			{
-				Logger.Warn("The quit password retrieved from the CBT kiosk endpoint is expired, denying access.");
-				return false;
+				Logger.Warn($"The quit password retrieved from the CBT kiosk endpoint has expired (expires at: {settings.PasswordExpiresAt}), denying access.");
+				return QuitPasswordVerification.Expired;
 			}
 
 			if (string.IsNullOrEmpty(settings.ExitPassword))
 			{
 				Logger.Warn("The CBT kiosk endpoint did not provide a quit password, denying access.");
-				return false;
+				return QuitPasswordVerification.Unavailable;
 			}
 
-			return string.Equals(settings.ExitPassword, password, StringComparison.Ordinal);
+			return string.Equals(settings.ExitPassword, password, StringComparison.Ordinal) ? QuitPasswordVerification.Valid : QuitPasswordVerification.Invalid;
+		}
+
+		/// <summary>
+		/// Determines whether the given expiry timestamp lies in the past. This is a defensive check for the case where the CBT panel reports
+		/// an expiry date but fails to flag the password as expired.
+		/// </summary>
+		private static bool HasExpired(DateTime? expiresAt)
+		{
+			return expiresAt.HasValue && expiresAt.Value < DateTime.Now;
 		}
 
 		protected void PrepareShutdown()

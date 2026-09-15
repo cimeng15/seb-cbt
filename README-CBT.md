@@ -78,9 +78,14 @@ SEB expects the endpoint to return JSON in this shape:
 Behaviour:
 
 - `success != true` or missing `data` → treated as a failure.
-- `is_expired == true` → the password is rejected (the exam cannot be quit with it).
-- `exit_password` empty/absent → rejected.
+- `is_expired == true` → the password is rejected with a dedicated **"password expired"** message.
+- If `is_expired` is false but `password_expires_at` lies in the past, the password is **also**
+  rejected as expired (defensive check in case the panel forgets to set the flag).
+- `exit_password` empty/absent → rejected as *unavailable*.
 - Otherwise the typed password is compared to `exit_password` (case-sensitive, exact match).
+
+The client distinguishes three failure reasons in its message box, localised in all 14 bundled
+languages: **wrong password**, **expired password**, and **server unreachable**.
 
 ### Fallback behaviour
 

@@ -378,6 +378,18 @@
     <Entry key="MessageBox_InvalidQuitPasswordTitle">
         Kata Sandi Keluar Tidak Valid
     </Entry>
+    <Entry key="MessageBox_QuitPasswordExpired">
+        Kata sandi keluar sudah kedaluwarsa. Silakan minta kata sandi baru kepada pengawas ujian.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordExpiredTitle">
+        Kata Sandi Keluar Kedaluwarsa
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailable">
+        Kata sandi keluar tidak dapat diverifikasi karena server CBT tidak dapat dihubungi. Silakan hubungi pengawas ujian.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailableTitle">
+        Kata Sandi Keluar Tidak Tersedia
+    </Entry>
     <Entry key="MessageBox_InvalidUnlockPassword">
         SEB hanya dapat dibuka dengan memasukkan kata sandi yang benar.
     </Entry>

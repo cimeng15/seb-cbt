@@ -378,6 +378,18 @@
     <Entry key="MessageBox_InvalidQuitPasswordTitle">
         無効な終了パスワード
     </Entry>
+    <Entry key="MessageBox_QuitPasswordExpired">
+        終了パスワードの有効期限が切れています。試験管理者に新しいパスワードを依頼してください。
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordExpiredTitle">
+        終了パスワードの有効期限切れ
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailable">
+        CBT サーバーに接続できないため、終了パスワードを検証できませんでした。試験管理者に連絡してください。
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailableTitle">
+        終了パスワードを利用できません
+    </Entry>
     <Entry key="MessageBox_InvalidUnlockPassword">
         SEBのロックを解除するには、正しいパスワードを入力する必要があります。
     </Entry>

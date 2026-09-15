@@ -378,6 +378,18 @@
     <Entry key="MessageBox_InvalidQuitPasswordTitle">
         Password di chiusura non valida
     </Entry>
+    <Entry key="MessageBox_QuitPasswordExpired">
+        La password di uscita è scaduta. Richiedi una nuova password all'amministratore dell'esame.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordExpiredTitle">
+        Password di uscita scaduta
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailable">
+        Impossibile verificare la password di uscita perché il server CBT non è raggiungibile. Contatta l'amministratore dell'esame.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailableTitle">
+        Password di uscita non disponibile
+    </Entry>
     <Entry key="MessageBox_InvalidUnlockPassword">
         SEB può essere sbloccato solo inserendo la password corretta.
     </Entry>

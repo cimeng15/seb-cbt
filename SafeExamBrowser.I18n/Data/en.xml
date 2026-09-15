@@ -393,6 +393,18 @@
     <Entry key="MessageBox_InvalidQuitPasswordTitle">
         Invalid Quit Password
     </Entry>
+    <Entry key="MessageBox_QuitPasswordExpired">
+        The quit password has expired. Please ask the exam administrator for a new password.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordExpiredTitle">
+        Quit Password Expired
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailable">
+        The quit password could not be verified because the CBT server is unreachable. Please contact the exam administrator.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailableTitle">
+        Quit Password Unavailable
+    </Entry>
     <Entry key="MessageBox_InvalidUnlockPassword">
         SEB can only be unlocked by entering the correct password.
     </Entry>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <Text>
     <Entry key="AboutWindow_LicenseInfo">
         Это приложение подпадает под действие условий публичной лицензии Mozilla версии 2.0. Браузер Safe Exam использует следующие фреймворки и сторонние библиотеки:
@@ -377,6 +377,18 @@
     </Entry>
     <Entry key="MessageBox_InvalidQuitPasswordTitle">
         Неверный пароль для выхода
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordExpired">
+        Пароль для выхода истёк. Пожалуйста, запросите новый пароль у администратора экзамена.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordExpiredTitle">
+        Пароль для выхода истёк
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailable">
+        Не удалось проверить пароль для выхода, так как сервер CBT недоступен. Пожалуйста, обратитесь к администратору экзамена.
+    </Entry>
+    <Entry key="MessageBox_QuitPasswordUnavailableTitle">
+        Пароль для выхода недоступен
     </Entry>
     <Entry key="MessageBox_InvalidUnlockPassword">
         SEB можно разблокировать, только введя правильный пароль.
