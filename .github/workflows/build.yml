@@ -34,8 +34,16 @@ jobs:
       - name: Install WiX Toolset (for the installer project)
         shell: pwsh
         run: |
-          choco install wixtoolset --version=3.14.1 -y --no-progress
-          echo "C:\Program Files (x86)\WiX Toolset v3.14\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          # WiX Toolset v3 is usually pre-installed on windows-latest; install only if missing.
+          $wix = Get-ChildItem "C:\Program Files (x86)\WiX Toolset*\bin\candle.exe" -ErrorAction SilentlyContinue
+          if (-not $wix) {
+            choco install wixtoolset --version=3.14.1 -y --no-progress --force
+          } else {
+            Write-Host "WiX Toolset already present: $($wix[0].FullName)"
+          }
+          $bin = (Get-ChildItem "C:\Program Files (x86)\WiX Toolset*\bin" -Directory | Select-Object -First 1).FullName
+          if ($bin) { $bin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append }
+          Get-Command candle.exe -ErrorAction SilentlyContinue | Out-Null
 
       - name: Restore NuGet packages
         run: nuget restore ${{ env.SOLUTION }}
