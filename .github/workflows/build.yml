@@ -13,13 +13,8 @@ env:
 
 jobs:
   build:
-    name: Build (${{ matrix.platform }})
+    name: Build (x64 + x86 + installer bundle)
     runs-on: windows-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        platform: [ x64, x86 ]
 
     steps:
       - name: Checkout
@@ -31,7 +26,7 @@ jobs:
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
 
-      - name: Install WiX Toolset (for the installer project)
+      - name: Install WiX Toolset (for the installer projects)
         shell: pwsh
         run: |
           # WiX Toolset v3 is usually pre-installed on windows-latest; install only if missing.
@@ -43,27 +38,43 @@ jobs:
           }
           $bin = (Get-ChildItem "C:\Program Files (x86)\WiX Toolset*\bin" -Directory | Select-Object -First 1).FullName
           if ($bin) { $bin | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append }
-          Get-Command candle.exe -ErrorAction SilentlyContinue | Out-Null
 
       - name: Restore NuGet packages
         run: nuget restore ${{ env.SOLUTION }}
 
-      - name: Build solution
-        # NOTE: do NOT use /m (parallel). The WiX installer projects run heat.exe in a pre-build
-        # event which requires the referenced projects' output to already exist; parallel builds
-        # can start Setup before its dependencies have finished.
-        run: msbuild ${{ env.SOLUTION }} /verbosity:minimal /property:langversion=latest /property:Configuration=${{ env.CONFIGURATION }} /property:Platform=${{ matrix.platform }}
+      # Build sequentially and in this exact order: the SetupBundle project (Release|x86) packs
+      # BOTH the x64 and the x86 Setup MSI, so the x64 installer must already exist.
+      # Do NOT use /m: the WiX projects harvest their dependencies in a pre-build event.
+      - name: Build x64
+        run: msbuild ${{ env.SOLUTION }} /verbosity:minimal /property:langversion=latest /property:Configuration=${{ env.CONFIGURATION }} /property:Platform=x64
 
-      - name: Upload MSI installer
+      - name: Build x86 (also produces the installer bundle)
+        run: msbuild ${{ env.SOLUTION }} /verbosity:minimal /property:langversion=latest /property:Configuration=${{ env.CONFIGURATION }} /property:Platform=x86
+
+      - name: Upload x64 MSI installer
         uses: actions/upload-artifact@v4
         with:
-          name: SEB-CBT-Setup-${{ matrix.platform }}
-          path: Setup/bin/${{ matrix.platform }}/${{ env.CONFIGURATION }}/Setup.msi
+          name: SEB-CBT-Setup-x64
+          path: Setup/bin/x64/${{ env.CONFIGURATION }}/Setup.msi
           if-no-files-found: warn
 
-      - name: Upload client binaries
+      - name: Upload x86 MSI installer
         uses: actions/upload-artifact@v4
         with:
-          name: SEB-CBT-Client-${{ matrix.platform }}
-          path: SafeExamBrowser.Client/bin/${{ matrix.platform }}/${{ env.CONFIGURATION }}/
+          name: SEB-CBT-Setup-x86
+          path: Setup/bin/x86/${{ env.CONFIGURATION }}/Setup.msi
+          if-no-files-found: warn
+
+      - name: Upload installer bundle (EXE)
+        uses: actions/upload-artifact@v4
+        with:
+          name: SEB-CBT-SetupBundle
+          path: SetupBundle/bin/x86/${{ env.CONFIGURATION }}/SetupBundle.exe
+          if-no-files-found: warn
+
+      - name: Upload client binaries (x64)
+        uses: actions/upload-artifact@v4
+        with:
+          name: SEB-CBT-Client-x64
+          path: SafeExamBrowser.Client/bin/x64/${{ env.CONFIGURATION }}/
           if-no-files-found: warn
