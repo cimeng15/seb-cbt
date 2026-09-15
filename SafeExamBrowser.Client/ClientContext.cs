@@ -58,6 +58,11 @@ namespace SafeExamBrowser.Client
 		internal IClientHost ClientHost { get; set; }
 
 		/// <summary>
+		/// The client for retrieving the quit/unlock settings from a CBT kiosk settings endpoint.
+		/// </summary>
+		internal ICbtKioskClient CbtKioskClient { get; set; }
+
+		/// <summary>
 		/// The hash algorithm.
 		/// </summary>
 		internal IHashAlgorithm HashAlgorithm { get; set; }

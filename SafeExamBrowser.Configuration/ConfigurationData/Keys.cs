@@ -266,6 +266,8 @@ namespace SafeExamBrowser.Configuration.ConfigurationData
 			internal const string AllowTermination = "allowQuit";
 			internal const string AllowVirtualMachine = "allowVirtualMachine";
 			internal const string AllowWindowCapture = "allowScreenSharing";
+			internal const string CbtKioskUrl = "cbtKioskURL";
+			internal const string CbtKioskTimeout = "cbtKioskTimeout";
 			internal const string ClipboardPolicy = "clipboardPolicy";
 			internal const string DisableSessionChangeLockScreen = "disableSessionChangeLockScreen";
 			internal const string KioskModeCreateNewDesktop = "createNewDesktop";

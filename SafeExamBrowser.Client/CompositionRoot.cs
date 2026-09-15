@@ -124,6 +124,7 @@ namespace SafeExamBrowser.Client
 			var applicationFactory = new ApplicationFactory(applicationMonitor, ModuleLogger(nameof(ApplicationFactory)), nativeMethods, processFactory, new Registry(ModuleLogger(nameof(Registry))));
 			var clipboard = new Clipboard(ModuleLogger(nameof(Clipboard)), nativeMethods);
 			var coordinator = new Coordinator();
+			var cbtKioskClient = new CbtKioskClient(ModuleLogger(nameof(CbtKioskClient)));
 			var displayMonitor = new DisplayMonitor(ModuleLogger(nameof(DisplayMonitor)), nativeMethods, systemInfo);
 			var explorerShell = new ExplorerShell(ModuleLogger(nameof(ExplorerShell)), nativeMethods);
 			var fileSystemDialog = BuildFileSystemDialog();
@@ -133,6 +134,7 @@ namespace SafeExamBrowser.Client
 			var operations = BuildOperations(applicationFactory, clipboard, displayMonitor, fileSystemDialog, runtimeProxy);
 			var responsibilities = BuildResponsibilities(coordinator, displayMonitor, explorerShell, runtimeProxy, sentinel, shutdown);
 
+			context.CbtKioskClient = cbtKioskClient;
 			context.HashAlgorithm = new HashAlgorithm();
 			context.MessageBox = messageBox;
 			context.Responsibilities = responsibilities;

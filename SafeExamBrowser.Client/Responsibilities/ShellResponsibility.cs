@@ -131,8 +131,7 @@ namespace SafeExamBrowser.Client.Responsibilities
 
 		private bool TryInitiateShutdown()
 		{
-			var hasQuitPassword = !string.IsNullOrEmpty(Settings.Security.QuitPasswordHash);
-			var initiateShutdown = hasQuitPassword ? TryValidateQuitPassword() : TryConfirmShutdown();
+			var initiateShutdown = HasQuitPassword ? TryValidateQuitPassword() : TryConfirmShutdown();
 			var success = false;
 
 			if (initiateShutdown)

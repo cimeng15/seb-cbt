@@ -40,11 +40,16 @@ namespace SafeExamBrowser.Client.Responsibilities
 			}
 		}
 
+		/// <summary>
+		/// Determines whether a quit/unlock password is required, either because a quit password hash or a CBT kiosk settings URL is configured.
+		/// </summary>
+		protected bool HasQuitPassword => !string.IsNullOrEmpty(Settings?.Security?.QuitPasswordHash) || !string.IsNullOrEmpty(Settings?.Security?.CbtKioskUrl);
+
 		protected bool IsValidQuitPassword(string password)
 		{
-			var actual = Context.HashAlgorithm.GenerateHashFor(password);
-			var expected = Settings.Security.QuitPasswordHash;
-			var valid = expected.Equals(actual, StringComparison.OrdinalIgnoreCase);
+			var valid = !string.IsNullOrEmpty(Settings.Security.CbtKioskUrl) && Context.CbtKioskClient != default
+				? IsValidCbtKioskPassword(password)
+				: IsValidLocalQuitPassword(password);
 
 			if (valid)
 			{
@@ -52,6 +57,49 @@ namespace SafeExamBrowser.Client.Responsibilities
 			}
 
 			return valid;
+		}
+
+		/// <summary>
+		/// Validates the given password against the locally configured quit password hash.
+		/// </summary>
+		private bool IsValidLocalQuitPassword(string password)
+		{
+			var actual = Context.HashAlgorithm.GenerateHashFor(password);
+			var expected = Settings.Security.QuitPasswordHash;
+
+			return expected.Equals(actual, StringComparison.OrdinalIgnoreCase);
+		}
+
+		/// <summary>
+		/// Validates the given password against the value currently configured on the CBT kiosk settings endpoint. If the endpoint cannot be
+		/// reached, the locally configured quit password hash is used as a fallback (if any), so that an exam can always be terminated even
+		/// when the CBT server is unavailable.
+		/// </summary>
+		private bool IsValidCbtKioskPassword(string password)
+		{
+			var settings = Context.CbtKioskClient.GetSettings(Settings.Security.CbtKioskUrl, Settings.Security.CbtKioskTimeout);
+
+			if (!settings.Success)
+			{
+				Logger.Warn($"Failed to retrieve the quit password from the CBT kiosk endpoint: {settings.Message}.");
+				Logger.Warn($"Falling back to the locally configured quit password{(string.IsNullOrEmpty(Settings.Security.QuitPasswordHash) ? " (none configured, access denied)" : string.Empty)}.");
+
+				return !string.IsNullOrEmpty(Settings.Security.QuitPasswordHash) && IsValidLocalQuitPassword(password);
+			}
+
+			if (settings.IsExpired)
+			{
+				Logger.Warn("The quit password retrieved from the CBT kiosk endpoint is expired, denying access.");
+				return false;
+			}
+
+			if (string.IsNullOrEmpty(settings.ExitPassword))
+			{
+				Logger.Warn("The CBT kiosk endpoint did not provide a quit password, denying access.");
+				return false;
+			}
+
+			return string.Equals(settings.ExitPassword, password, StringComparison.Ordinal);
 		}
 
 		protected void PrepareShutdown()
@@ -134,7 +182,7 @@ namespace SafeExamBrowser.Client.Responsibilities
 
 		private LockScreenResult WaitForLockScreenResolution()
 		{
-			var hasQuitPassword = !string.IsNullOrEmpty(Settings.Security.QuitPasswordHash);
+			var hasQuitPassword = HasQuitPassword;
 			var result = default(LockScreenResult);
 
 			for (var unlocked = false; !unlocked;)
@@ -148,8 +196,7 @@ namespace SafeExamBrowser.Client.Responsibilities
 				}
 				else if (hasQuitPassword)
 				{
-					var passwordHash = Context.HashAlgorithm.GenerateHashFor(result.Password);
-					var isCorrect = Settings.Security.QuitPasswordHash.Equals(passwordHash, StringComparison.OrdinalIgnoreCase);
+					var isCorrect = IsValidQuitPassword(result.Password);
 
 					if (isCorrect)
 					{

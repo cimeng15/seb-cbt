@@ -126,7 +126,7 @@ namespace SafeExamBrowser.Client.Responsibilities
 		private bool IsAllowedToReconfigure(string url)
 		{
 			var allow = false;
-			var hasQuitPassword = !string.IsNullOrWhiteSpace(Settings.Security.QuitPasswordHash);
+			var hasQuitPassword = HasQuitPassword;
 			var hasUrl = !string.IsNullOrWhiteSpace(Settings.Security.ReconfigurationUrl);
 
 			if (hasQuitPassword)

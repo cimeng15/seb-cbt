@@ -305,6 +305,7 @@ namespace SafeExamBrowser.Configuration.ConfigurationData
 			settings.Security.AllowStickyKeys = false;
 			settings.Security.AllowTermination = true;
 			settings.Security.AllowWindowCapture = false;
+			settings.Security.CbtKioskTimeout = 5000;
 			settings.Security.ClipboardPolicy = ClipboardPolicy.Isolated;
 			settings.Security.DisableSessionChangeLockScreen = false;
 			settings.Security.KioskMode = KioskMode.CreateNewDesktop;

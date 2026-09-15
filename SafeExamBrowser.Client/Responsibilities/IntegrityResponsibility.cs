@@ -100,7 +100,7 @@ namespace SafeExamBrowser.Client.Responsibilities
 
 		private void UpdateSessionIntegrity()
 		{
-			var hasQuitPassword = !string.IsNullOrEmpty(Settings?.Security.QuitPasswordHash);
+			var hasQuitPassword = HasQuitPassword;
 
 			if (hasQuitPassword)
 			{
@@ -124,7 +124,7 @@ namespace SafeExamBrowser.Client.Responsibilities
 
 		private void VerifySessionIntegrity()
 		{
-			var hasQuitPassword = !string.IsNullOrEmpty(Settings.Security.QuitPasswordHash);
+			var hasQuitPassword = HasQuitPassword;
 
 			if (hasQuitPassword && Settings.Security.VerifySessionIntegrity)
 			{

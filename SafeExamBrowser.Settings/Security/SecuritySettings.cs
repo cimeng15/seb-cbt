@@ -53,6 +53,18 @@ namespace SafeExamBrowser.Settings.Security
 		public ClipboardPolicy ClipboardPolicy { get; set; }
 
 		/// <summary>
+		/// An optional URL of a CBT kiosk settings endpoint from which the quit/unlock password is retrieved during a running session.
+		/// When set, the quit/unlock password is validated against the value returned by this endpoint instead of the locally configured
+		/// <see cref="QuitPasswordHash"/>, which allows the exam administrator to manage the quit password centrally via the CBT panel.
+		/// </summary>
+		public string CbtKioskUrl { get; set; }
+
+		/// <summary>
+		/// The timeout in milliseconds to be used when retrieving the quit/unlock password from <see cref="CbtKioskUrl"/>.
+		/// </summary>
+		public int CbtKioskTimeout { get; set; }
+
+		/// <summary>
 		/// Determines whether the lock screen is disabled in case of a user session change. This setting overrides the activation based on
 		/// <see cref="Service.ServiceSettings.IgnoreService"/> and <see cref="Service.ServiceSettings.DisableUserLock"/> or <see cref="Service.ServiceSettings.DisableUserSwitch"/>.
 		/// </summary>

@@ -38,6 +38,12 @@ namespace SafeExamBrowser.Configuration.ConfigurationData.DataMapping
 				case Keys.Security.AllowWindowCapture:
 					MapAllowWindowCapture(settings, value);
 					break;
+				case Keys.Security.CbtKioskUrl:
+					MapCbtKioskUrl(settings, value);
+					break;
+				case Keys.Security.CbtKioskTimeout:
+					MapCbtKioskTimeout(settings, value);
+					break;
 				case Keys.Security.ClipboardPolicy:
 					MapClipboardPolicy(settings, value);
 					break;
@@ -105,6 +111,22 @@ namespace SafeExamBrowser.Configuration.ConfigurationData.DataMapping
 			if (value is bool allow)
 			{
 				settings.Security.AllowWindowCapture = allow;
+			}
+		}
+
+		private void MapCbtKioskUrl(AppSettings settings, object value)
+		{
+			if (value is string url)
+			{
+				settings.Security.CbtKioskUrl = url;
+			}
+		}
+
+		private void MapCbtKioskTimeout(AppSettings settings, object value)
+		{
+			if (value is int timeout)
+			{
+				settings.Security.CbtKioskTimeout = timeout;
 			}
 		}
 
