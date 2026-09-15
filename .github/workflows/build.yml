@@ -49,7 +49,10 @@ jobs:
         run: nuget restore ${{ env.SOLUTION }}
 
       - name: Build solution
-        run: msbuild ${{ env.SOLUTION }} /m /verbosity:minimal /property:langversion=latest /property:Configuration=${{ env.CONFIGURATION }} /property:Platform=${{ matrix.platform }}
+        # NOTE: do NOT use /m (parallel). The WiX installer projects run heat.exe in a pre-build
+        # event which requires the referenced projects' output to already exist; parallel builds
+        # can start Setup before its dependencies have finished.
+        run: msbuild ${{ env.SOLUTION }} /verbosity:minimal /property:langversion=latest /property:Configuration=${{ env.CONFIGURATION }} /property:Platform=${{ matrix.platform }}
 
       - name: Upload MSI installer
         uses: actions/upload-artifact@v4
