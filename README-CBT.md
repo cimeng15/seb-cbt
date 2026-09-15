@@ -103,10 +103,28 @@ SEB is a **.NET Framework 4.8 / WPF** application, so it can only be built on **
 
 Push to your fork; `.github/workflows/build.yml` builds the solution and uploads:
 
-- `SEB-CBT-Setup-<platform>` → the `Setup.msi` installer
-- `SEB-CBT-Client-<platform>` → the client binaries
+- `SEB-CBT-Setup-x64` / `SEB-CBT-Setup-x86` → platform MSI installers
+- `SEB-CBT-SetupBundle` → the combined `SetupBundle.exe` (installs x64 or x86 as appropriate)
+- `SEB-CBT-Client-x64` → the raw client binaries
 
-Download the artifacts from the workflow run.
+Download the artifacts from the workflow run. The job builds x64 first, then x86, because the
+bundle project packs both MSIs.
+
+### Code signing
+
+The upstream project signs its binaries with a certificate owned by ETH Zürich. That certificate is
+not available here, so signing is **disabled by default** and the produced installers are unsigned.
+Windows SmartScreen will therefore warn on first run — click *More info → Run anyway*, or sign the
+build yourself.
+
+To sign with your own certificate, pass:
+
+```
+msbuild SafeExamBrowser.sln /p:Configuration=Release /p:Platform=x64 ^
+  /p:SignInstallers=true /p:SigningCertificateSha1=<your-cert-thumbprint>
+```
+
+(The certificate must be present in the build machine's certificate store.)
 
 ### Option B — local Windows machine
 
