@@ -93,11 +93,29 @@ Verification tries the endpoints in this order, each retried `cbtKioskAttempts` 
 
 1. the primary `cbtKioskURL`,
 2. the `cbtFallbackURL` (if configured) — the **online fallback**,
-3. only if **no endpoint** is reachable, the locally configured `hashedQuitPassword` (if any).
+3. only if **no endpoint** is reachable, the **offline fallback** (see below).
 
-If no local hash is configured either, access is denied. This guarantees that an exam can still be
-terminated even when the CBT server is completely unavailable — configure a local
-`hashedQuitPassword` as an emergency password if you need that safety net.
+#### Offline fallback (settable directly on the client)
+
+When the CBT server cannot be reached at all, SEB checks for an emergency quit password configured
+locally on the exam client — no configuration file required. It looks for a file named
+**`CbtFallback.txt`** in:
+
+1. `%ProgramData%\SafeExamBrowser\CbtFallback.txt` (all users, needs administrator rights — preferred),
+2. `%APPDATA%\SafeExamBrowser\CbtFallback.txt` (current user).
+
+The file contains either a hash or a plain-text password (hash preferred):
+
+```
+# comment lines start with '#'
+password_hash=<Base16 SHA-256 hash of the emergency password>
+# or
+password=MyEmergencyPassword
+```
+
+See `examples/CbtFallback.txt.example`. If no such file exists, the compile-time
+`CbtDefaults.OfflineFallbackPasswordHash` is used; if that is empty too, the `hashedQuitPassword` of
+the active configuration applies; if none is set, access is denied.
 
 ### Security notes
 

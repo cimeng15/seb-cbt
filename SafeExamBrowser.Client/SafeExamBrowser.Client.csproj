@@ -112,6 +112,7 @@
     </Compile>
     <Compile Include="Responsibilities\ApplicationsResponsibility.cs" />
     <Compile Include="Responsibilities\BrowserResponsibility.cs" />
+    <Compile Include="Responsibilities\CbtOfflineFallback.cs" />
     <Compile Include="Responsibilities\CommunicationResponsibility.cs" />
     <Compile Include="Responsibilities\ClientResponsibility.cs" />
     <Compile Include="Responsibilities\IntegrityResponsibility.cs" />

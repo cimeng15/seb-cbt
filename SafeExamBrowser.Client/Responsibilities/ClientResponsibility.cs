@@ -104,15 +104,7 @@ namespace SafeExamBrowser.Client.Responsibilities
 			{
 				Logger.Warn($"Failed to retrieve the quit password from the CBT kiosk endpoint(s): {settings.Message}.");
 
-				if (!string.IsNullOrEmpty(Settings.Security.QuitPasswordHash))
-				{
-					Logger.Warn("Falling back to the locally configured quit password.");
-
-					return IsValidLocalQuitPassword(password) ? QuitPasswordVerification.Valid : QuitPasswordVerification.Invalid;
-				}
-
-				Logger.Warn("No locally configured quit password available, denying access.");
-				return QuitPasswordVerification.Unavailable;
+				return VerifyOfflineFallback(password);
 			}
 
 			if (settings.IsExpired || HasExpired(settings.PasswordExpiresAt))
@@ -137,6 +129,37 @@ namespace SafeExamBrowser.Client.Responsibilities
 		private static bool HasExpired(DateTime? expiresAt)
 		{
 			return expiresAt.HasValue && expiresAt.Value < DateTime.Now;
+		}
+
+		/// <summary>
+		/// Verifies the given password against the offline fallback, used when no CBT kiosk endpoint is reachable. The offline fallback is
+		/// taken from the file configured on the client (see <see cref="CbtOfflineFallback"/>), the compile-time default, or the quit password
+		/// hash of the active configuration, in that order. Returns <see cref="QuitPasswordVerification.Unavailable"/> when none is configured.
+		/// </summary>
+		private QuitPasswordVerification VerifyOfflineFallback(string password)
+		{
+			var offlineHash = CbtOfflineFallback.TryReadPasswordHash(Context.HashAlgorithm.GenerateHashFor)
+				?? (string.IsNullOrEmpty(CbtDefaults.OfflineFallbackPasswordHash) ? default : CbtDefaults.OfflineFallbackPasswordHash);
+
+			if (!string.IsNullOrEmpty(offlineHash))
+			{
+				Logger.Warn("No CBT kiosk endpoint reachable, verifying against the offline fallback password.");
+
+				var actual = Context.HashAlgorithm.GenerateHashFor(password);
+				var valid = offlineHash.Equals(actual, StringComparison.OrdinalIgnoreCase);
+
+				return valid ? QuitPasswordVerification.Valid : QuitPasswordVerification.Invalid;
+			}
+
+			if (!string.IsNullOrEmpty(Settings.Security.QuitPasswordHash))
+			{
+				Logger.Warn("No offline fallback password configured, falling back to the quit password of the active configuration.");
+
+				return IsValidLocalQuitPassword(password) ? QuitPasswordVerification.Valid : QuitPasswordVerification.Invalid;
+			}
+
+			Logger.Warn("No CBT kiosk endpoint and no offline fallback password available, denying access.");
+			return QuitPasswordVerification.Unavailable;
 		}
 
 		protected void PrepareShutdown()

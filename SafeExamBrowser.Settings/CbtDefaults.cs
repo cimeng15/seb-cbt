@@ -40,5 +40,18 @@ namespace SafeExamBrowser.Settings
 		/// The default delay (in milliseconds) between attempts when querying the CBT kiosk settings endpoint.
 		/// </summary>
 		public const int KioskAttemptInterval = 1000;
+
+		/// <summary>
+		/// The name of the optional offline fallback file which allows an exam administrator to define an emergency quit password
+		/// directly on the client, without a configuration file. It is searched for in the SEB directory of the common application
+		/// data folder first, then in the current user's application data folder.
+		/// </summary>
+		public const string OfflineFallbackFileName = "CbtFallback.txt";
+
+		/// <summary>
+		/// A compile-time offline fallback password hash (Base16-encoded SHA-256). Empty by default; set this to ship a built-in
+		/// emergency quit password. A password configured via <see cref="OfflineFallbackFileName"/> takes precedence.
+		/// </summary>
+		public const string OfflineFallbackPasswordHash = "";
 	}
 }

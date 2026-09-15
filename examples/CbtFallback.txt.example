@@ -1,0 +1,19 @@
+# Offline fallback quit password for Safe Exam Browser (CBT Edition)
+#
+# Place this file (renamed to "CbtFallback.txt") in one of:
+#     C:\ProgramData\SafeExamBrowser\CbtFallback.txt   (all users - preferred, needs admin rights)
+#     C:\Users\<user>\AppData\Roaming\SafeExamBrowser\CbtFallback.txt
+#
+# It is only used when NO CBT kiosk endpoint is reachable (server down / no internet).
+# When the CBT server answers, the password from the CBT panel always wins.
+#
+# Lines starting with '#' are comments. Use ONE of the two keys below.
+
+# --- Recommended: Base16 (lowercase hex) SHA-256 hash of the emergency password ------
+# Get the hash, e.g. in PowerShell:
+#     $p='MyEmergencyPassword'; $s=[Text.Encoding]::UTF8.GetBytes($p)
+#     ([BitConverter]::ToString((New-Object Security.Cryptography.SHA256Managed).ComputeHash($s)) -replace '-','').ToLower()
+password_hash=
+
+# --- Alternative: plain-text password (less secure, stored readable) -----------------
+# password=MyEmergencyPassword
