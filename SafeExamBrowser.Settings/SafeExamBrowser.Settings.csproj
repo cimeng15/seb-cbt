@@ -93,6 +93,7 @@
     <Compile Include="Service\ServicePolicy.cs" />
     <Compile Include="Service\ServiceSettings.cs" />
     <Compile Include="AppSettings.cs" />
+    <Compile Include="CbtDefaults.cs" />
     <Compile Include="SystemComponents\AudioSettings.cs" />
     <Compile Include="SystemComponents\PowerSupplySettings.cs" />
     <Compile Include="System\SystemSettings.cs" />

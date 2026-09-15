@@ -65,6 +65,22 @@ namespace SafeExamBrowser.Settings.Security
 		public int CbtKioskTimeout { get; set; }
 
 		/// <summary>
+		/// An optional URL of a secondary CBT kiosk settings endpoint which is queried as an online fallback when the primary
+		/// <see cref="CbtKioskUrl"/> cannot be reached.
+		/// </summary>
+		public string CbtFallbackUrl { get; set; }
+
+		/// <summary>
+		/// The number of attempts to make when retrieving the quit/unlock password from the CBT kiosk settings endpoint(s).
+		/// </summary>
+		public int CbtKioskAttempts { get; set; }
+
+		/// <summary>
+		/// The delay in milliseconds between attempts when retrieving the quit/unlock password from the CBT kiosk settings endpoint(s).
+		/// </summary>
+		public int CbtKioskAttemptInterval { get; set; }
+
+		/// <summary>
 		/// Determines whether the lock screen is disabled in case of a user session change. This setting overrides the activation based on
 		/// <see cref="Service.ServiceSettings.IgnoreService"/> and <see cref="Service.ServiceSettings.DisableUserLock"/> or <see cref="Service.ServiceSettings.DisableUserSwitch"/>.
 		/// </summary>

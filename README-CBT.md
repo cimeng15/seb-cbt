@@ -7,6 +7,34 @@ The goal: the exam administrator manages the **quit/unlock password** centrally 
 and every running exam client picks it up automatically — no need to regenerate and redistribute a
 `.seb` configuration file whenever the password changes.
 
+The CBT URL and endpoint are **compiled into the application**, so it works out of the box without
+any `.seb` file at all. A configuration file is still fully supported and overrides the built-in
+defaults when supplied.
+
+---
+
+## Built-in defaults (no `.seb` file required)
+
+`SafeExamBrowser.Settings/CbtDefaults.cs` holds the compiled-in values:
+
+| Constant       | Value                                              |
+|----------------|----------------------------------------------------|
+| `BaseUrl`      | `https://cbt.smkdata.sch.id`                       |
+| `KioskUrl`     | `https://cbt.smkdata.sch.id/api/kiosk/settings`    |
+| `KioskTimeout` | `5000` ms                                          |
+| `KioskAttempts`| `3`                                                |
+| `KioskAttemptInterval` | `1000` ms                                  |
+
+These are applied in `DataValues.LoadDefaultSettings()`, which is used whenever the application
+starts without a configuration file. As a result, launching `SafeExamBrowser.exe` directly:
+
+- opens `https://cbt.smkdata.sch.id`,
+- locks the client down (fullscreen, Alt+Tab / Alt+F4 / Win / F12 / right-click / clipboard / print /
+  downloads blocked, navigation restricted to the CBT host),
+- and validates the quit/unlock password against the CBT endpoint.
+
+To change the URL, edit `CbtDefaults.cs` and rebuild — or ship a `.seb` file, which overrides them.
+
 ---
 
 ## What was changed
@@ -21,10 +49,13 @@ the current password from that endpoint and compares it directly.
 
 ### New setting keys
 
-| Key                | Type   | Description                                                                 |
-|--------------------|--------|-----------------------------------------------------------------------------|
-| `cbtKioskURL`      | string | URL of the CBT kiosk settings endpoint (e.g. `https://cbt.smkdata.sch.id/api/kiosk/settings`). |
-| `cbtKioskTimeout`  | int    | Request timeout in milliseconds (default `5000`).                           |
+| Key                      | Type   | Description                                                                 |
+|--------------------------|--------|-----------------------------------------------------------------------------|
+| `cbtKioskURL`            | string | URL of the CBT kiosk settings endpoint (default: the built-in CBT endpoint). |
+| `cbtKioskTimeout`        | int    | Request timeout in milliseconds (default `5000`).                            |
+| `cbtFallbackURL`         | string | Optional secondary endpoint queried when the primary one is unreachable.     |
+| `cbtKioskAttempts`       | int    | Number of attempts per endpoint (default `3`).                               |
+| `cbtKioskAttemptInterval`| int    | Delay between attempts in milliseconds (default `1000`).                     |
 
 When `cbtKioskURL` is set, the quit/unlock password is validated against the endpoint. When it is not
 set, behaviour is exactly as upstream (local hash comparison).
@@ -53,10 +84,15 @@ Behaviour:
 
 ### Fallback behaviour
 
-If the endpoint cannot be reached (offline, server down, timeout), SEB logs a warning and falls back
-to the locally configured `hashedQuitPassword`, **if one is set**. If no local hash is configured,
-access is denied. This guarantees that an exam can still be terminated even when the CBT server is
-unavailable — configure a local `hashedQuitPassword` as an emergency password if you need this.
+Verification tries the endpoints in this order, each retried `cbtKioskAttempts` times:
+
+1. the primary `cbtKioskURL`,
+2. the `cbtFallbackURL` (if configured) — the **online fallback**,
+3. only if **no endpoint** is reachable, the locally configured `hashedQuitPassword` (if any).
+
+If no local hash is configured either, access is denied. This guarantees that an exam can still be
+terminated even when the CBT server is completely unavailable — configure a local
+`hashedQuitPassword` as an emergency password if you need that safety net.
 
 ### Security notes
 

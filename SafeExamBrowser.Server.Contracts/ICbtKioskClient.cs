@@ -18,9 +18,9 @@ namespace SafeExamBrowser.Server.Contracts
 	public interface ICbtKioskClient
 	{
 		/// <summary>
-		/// Retrieves the quit/unlock settings from the given endpoint. Never throws, but returns a result with
-		/// <see cref="KioskSettings.Success"/> set to <c>false</c> and a descriptive message on failure.
+		/// Retrieves the quit/unlock settings from the given endpoint, retrying up to <paramref name="attempts"/> times. Never throws,
+		/// but returns a result with <see cref="KioskSettings.Success"/> set to <c>false</c> and a descriptive message on failure.
 		/// </summary>
-		KioskSettings GetSettings(string url, int timeout = 5000);
+		KioskSettings GetSettings(string url, int timeout = 5000, int attempts = 1, int attemptInterval = 0);
 	}
 }

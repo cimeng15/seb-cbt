@@ -39,7 +39,7 @@ namespace SafeExamBrowser.Server
 			this.logger = logger;
 		}
 
-		public KioskSettings GetSettings(string url, int timeout = DEFAULT_TIMEOUT)
+		public KioskSettings GetSettings(string url, int timeout = DEFAULT_TIMEOUT, int attempts = 1, int attemptInterval = 0)
 		{
 			var settings = new KioskSettings();
 
@@ -48,6 +48,38 @@ namespace SafeExamBrowser.Server
 				settings.Message = "No CBT kiosk settings URL configured.";
 				return settings;
 			}
+
+			if (attempts < 1)
+			{
+				attempts = 1;
+			}
+
+			for (var attempt = 1; attempt <= attempts; attempt++)
+			{
+				settings = TryGetSettings(url, timeout);
+
+				if (settings.Success)
+				{
+					return settings;
+				}
+
+				if (attempt < attempts)
+				{
+					logger.Warn($"Attempt {attempt}/{attempts} to retrieve CBT kiosk settings from '{url}' failed, retrying in {attemptInterval}ms...");
+
+					if (attemptInterval > 0)
+					{
+						System.Threading.Thread.Sleep(attemptInterval);
+					}
+				}
+			}
+
+			return settings;
+		}
+
+		private KioskSettings TryGetSettings(string url, int timeout)
+		{
+			var settings = new KioskSettings();
 
 			try
 			{

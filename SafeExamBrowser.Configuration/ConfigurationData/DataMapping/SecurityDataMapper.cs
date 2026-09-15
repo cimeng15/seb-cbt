@@ -44,6 +44,15 @@ namespace SafeExamBrowser.Configuration.ConfigurationData.DataMapping
 				case Keys.Security.CbtKioskTimeout:
 					MapCbtKioskTimeout(settings, value);
 					break;
+				case Keys.Security.CbtFallbackUrl:
+					MapCbtFallbackUrl(settings, value);
+					break;
+				case Keys.Security.CbtKioskAttempts:
+					MapCbtKioskAttempts(settings, value);
+					break;
+				case Keys.Security.CbtKioskAttemptInterval:
+					MapCbtKioskAttemptInterval(settings, value);
+					break;
 				case Keys.Security.ClipboardPolicy:
 					MapClipboardPolicy(settings, value);
 					break;
@@ -127,6 +136,30 @@ namespace SafeExamBrowser.Configuration.ConfigurationData.DataMapping
 			if (value is int timeout)
 			{
 				settings.Security.CbtKioskTimeout = timeout;
+			}
+		}
+
+		private void MapCbtFallbackUrl(AppSettings settings, object value)
+		{
+			if (value is string url)
+			{
+				settings.Security.CbtFallbackUrl = url;
+			}
+		}
+
+		private void MapCbtKioskAttempts(AppSettings settings, object value)
+		{
+			if (value is int attempts)
+			{
+				settings.Security.CbtKioskAttempts = attempts;
+			}
+		}
+
+		private void MapCbtKioskAttemptInterval(AppSettings settings, object value)
+		{
+			if (value is int interval)
+			{
+				settings.Security.CbtKioskAttemptInterval = interval;
 			}
 		}
 

@@ -71,17 +71,26 @@ namespace SafeExamBrowser.Client.Responsibilities
 		}
 
 		/// <summary>
-		/// Validates the given password against the value currently configured on the CBT kiosk settings endpoint. If the endpoint cannot be
-		/// reached, the locally configured quit password hash is used as a fallback (if any), so that an exam can always be terminated even
-		/// when the CBT server is unavailable.
+		/// Validates the given password against the value currently configured on the CBT kiosk settings endpoint. If the primary endpoint
+		/// cannot be reached, the configured fallback endpoint is queried (online fallback). Only when neither endpoint is reachable does
+		/// the locally configured quit password hash apply (if any), so that an exam can always be terminated even when the CBT server is
+		/// unavailable.
 		/// </summary>
 		private bool IsValidCbtKioskPassword(string password)
 		{
-			var settings = Context.CbtKioskClient.GetSettings(Settings.Security.CbtKioskUrl, Settings.Security.CbtKioskTimeout);
+			var attempts = Settings.Security.CbtKioskAttempts > 0 ? Settings.Security.CbtKioskAttempts : 1;
+			var interval = Settings.Security.CbtKioskAttemptInterval;
+			var settings = Context.CbtKioskClient.GetSettings(Settings.Security.CbtKioskUrl, Settings.Security.CbtKioskTimeout, attempts, interval);
+
+			if (!settings.Success && !string.IsNullOrEmpty(Settings.Security.CbtFallbackUrl))
+			{
+				Logger.Warn($"Primary CBT kiosk endpoint unavailable ({settings.Message}), trying the configured fallback endpoint...");
+				settings = Context.CbtKioskClient.GetSettings(Settings.Security.CbtFallbackUrl, Settings.Security.CbtKioskTimeout, attempts, interval);
+			}
 
 			if (!settings.Success)
 			{
-				Logger.Warn($"Failed to retrieve the quit password from the CBT kiosk endpoint: {settings.Message}.");
+				Logger.Warn($"Failed to retrieve the quit password from the CBT kiosk endpoint(s): {settings.Message}.");
 				Logger.Warn($"Falling back to the locally configured quit password{(string.IsNullOrEmpty(Settings.Security.QuitPasswordHash) ? " (none configured, access denied)" : string.Empty)}.");
 
 				return !string.IsNullOrEmpty(Settings.Security.QuitPasswordHash) && IsValidLocalQuitPassword(password);

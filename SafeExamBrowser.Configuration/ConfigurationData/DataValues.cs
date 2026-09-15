@@ -16,6 +16,7 @@ using SafeExamBrowser.Configuration.Contracts;
 using SafeExamBrowser.Settings;
 using SafeExamBrowser.Settings.Applications;
 using SafeExamBrowser.Settings.Browser;
+using SafeExamBrowser.Settings.Browser.Filter;
 using SafeExamBrowser.Settings.Browser.Proxy;
 using SafeExamBrowser.Settings.Logging;
 using SafeExamBrowser.Settings.Proctoring;
@@ -212,7 +213,7 @@ namespace SafeExamBrowser.Configuration.ConfigurationData
 			settings.Browser.AdditionalWindow.UrlPolicy = UrlPolicy.Never;
 			settings.Browser.AllowConfigurationDownloads = true;
 			settings.Browser.AllowCustomDownAndUploadLocation = false;
-			settings.Browser.AllowDownloads = true;
+			settings.Browser.AllowDownloads = false;
 			settings.Browser.AllowFind = true;
 			settings.Browser.AllowPageZoom = true;
 			settings.Browser.AllowPdfReader = true;
@@ -223,12 +224,30 @@ namespace SafeExamBrowser.Configuration.ConfigurationData
 			settings.Browser.DeleteCookiesOnShutdown = true;
 			settings.Browser.DeleteCookiesOnStartup = true;
 			settings.Browser.EnableBrowser = true;
+			// Lock navigation to the CBT host, but do NOT filter content requests by default: doing so would block
+			// sub-resources served from other hosts (CDNs, fonts, …) and could break the exam page. Administrators can
+			// still enable content filtering via the configuration file if their CBT deployment does not rely on such assets.
+			settings.Browser.Filter.ProcessContentRequests = false;
+			settings.Browser.Filter.ProcessMainRequests = true;
+			settings.Browser.Filter.Rules.Add(new FilterRuleSettings
+			{
+				Expression = CbtDefaults.BaseUrl.Replace("https://", string.Empty),
+				Result = FilterResult.Allow,
+				Type = FilterRuleType.Simplified
+			});
+			settings.Browser.Filter.Rules.Add(new FilterRuleSettings
+			{
+				Expression = CbtDefaults.BaseUrl.Replace("https://", string.Empty) + "/*",
+				Result = FilterResult.Allow,
+				Type = FilterRuleType.Simplified
+			});
+
 			settings.Browser.MainWindow.AllowAddressBar = false;
 			settings.Browser.MainWindow.AllowBackwardNavigation = false;
 			settings.Browser.MainWindow.AllowDeveloperConsole = false;
 			settings.Browser.MainWindow.AllowForwardNavigation = false;
 			settings.Browser.MainWindow.AllowReloading = true;
-			settings.Browser.MainWindow.FullScreenMode = false;
+			settings.Browser.MainWindow.FullScreenMode = true;
 			settings.Browser.MainWindow.RelativeHeight = 100;
 			settings.Browser.MainWindow.RelativeWidth = 100;
 			settings.Browser.MainWindow.ShowHomeButton = false;
@@ -241,7 +260,7 @@ namespace SafeExamBrowser.Configuration.ConfigurationData
 			settings.Browser.SendBrowserExamKey = false;
 			settings.Browser.SendConfigurationKey = false;
 			settings.Browser.ShowFileSystemElementPath = true;
-			settings.Browser.StartUrl = "https://www.safeexambrowser.org/start";
+			settings.Browser.StartUrl = CbtDefaults.BaseUrl;
 			settings.Browser.UseCustomUserAgent = false;
 			settings.Browser.UseIsolatedClipboard = true;
 			settings.Browser.UseQueryParameter = false;
@@ -256,7 +275,7 @@ namespace SafeExamBrowser.Configuration.ConfigurationData
 
 			settings.Keyboard.AllowAltEsc = false;
 			settings.Keyboard.AllowAltF4 = false;
-			settings.Keyboard.AllowAltTab = true;
+			settings.Keyboard.AllowAltTab = false;
 			settings.Keyboard.AllowCtrlC = true;
 			settings.Keyboard.AllowCtrlEsc = false;
 			settings.Keyboard.AllowCtrlV = true;
@@ -273,7 +292,7 @@ namespace SafeExamBrowser.Configuration.ConfigurationData
 			settings.Keyboard.AllowF9 = true;
 			settings.Keyboard.AllowF10 = true;
 			settings.Keyboard.AllowF11 = true;
-			settings.Keyboard.AllowF12 = true;
+			settings.Keyboard.AllowF12 = false;
 			settings.Keyboard.AllowInjected = false;
 			settings.Keyboard.AllowPrintScreen = false;
 			settings.Keyboard.AllowSystemKey = false;
@@ -281,7 +300,7 @@ namespace SafeExamBrowser.Configuration.ConfigurationData
 			settings.LogLevel = LogLevel.Debug;
 
 			settings.Mouse.AllowMiddleButton = false;
-			settings.Mouse.AllowRightButton = true;
+			settings.Mouse.AllowRightButton = false;
 
 			settings.PowerSupply.ChargeThresholdCritical = 0.1;
 			settings.PowerSupply.ChargeThresholdLow = 0.2;
@@ -305,7 +324,10 @@ namespace SafeExamBrowser.Configuration.ConfigurationData
 			settings.Security.AllowStickyKeys = false;
 			settings.Security.AllowTermination = true;
 			settings.Security.AllowWindowCapture = false;
-			settings.Security.CbtKioskTimeout = 5000;
+			settings.Security.CbtKioskUrl = CbtDefaults.KioskUrl;
+			settings.Security.CbtKioskTimeout = CbtDefaults.KioskTimeout;
+			settings.Security.CbtKioskAttempts = CbtDefaults.KioskAttempts;
+			settings.Security.CbtKioskAttemptInterval = CbtDefaults.KioskAttemptInterval;
 			settings.Security.ClipboardPolicy = ClipboardPolicy.Isolated;
 			settings.Security.DisableSessionChangeLockScreen = false;
 			settings.Security.KioskMode = KioskMode.CreateNewDesktop;
